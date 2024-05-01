@@ -344,10 +344,7 @@ func (c cursorQuerier) RunQueryWithCursorParamsFunc(
 	var err error
 	var cur int32
 	var cu float64
-	cu, ok = cursor.(float64)
-	if !ok {
-		cur = 0
-	}
+	cu, _ = cursor.(float64)
 	cur = int32(cu)
 	switch subCursor {
 	case DummyStatusNameCursorKey:

@@ -1,3 +1,4 @@
+// Package cursorpager provides a way to paginate data using cursor-based pagination.
 package cursorpager
 
 import (
@@ -20,7 +21,8 @@ type preCursor struct {
 	valid bool `json:"-"`
 	// CursorID represents the ID of the cursor.
 	// This value must always be unique within the listing.
-	// Since the type also changes, it is defined as any type, and since the cursor argument in Query-type methods passes this value, type assertions must be made,
+	// Since the type also changes, it is defined as any type, and since the cursor argument
+	// in Query-type methods passes this value, type assertions must be made,
 	// but since functions can be passed, the behavior in case of failure can also be customized.
 	CursorID any `json:"id"`
 	// CursorPointsNext represents the direction of the cursor.
@@ -32,8 +34,10 @@ type preCursor struct {
 	SubCursorName string `json:"sub_cursor_name"`
 	// SubCursor represents the value of the sub-cursor.
 	// The value will vary depending on what was adopted in the sorting order.
-	// Since the type also changes, it is defined as any type, and since the SubCursorValue argument in Query-type methods passes this value,
-	// it is necessary to make a type assertion, but since a function can be passed, the behavior in case of failure can also be customized.
+	// Since the type also changes, it is defined as any type,
+	// and since the SubCursorValue argument in Query-type methods passes this value,
+	// it is necessary to make a type assertion, but since a function can be passed,
+	// the behavior in case of failure can also be customized.
 	SubCursor any `json:"sub_cursor"`
 }
 
@@ -205,11 +209,15 @@ func GetCursorData[T any](
 		// For example, if the data is 1, 2, 3, 4, 5, 6,....
 		// if limit is 2, cursor is 5, and pointsNext is false(prev),
 		// (To make it easier to understand, after getting the data of 1 and 2, we get the data of 3 and 4 with next,
-		// and when the data of 5 and 6 are obtained by next again, prev becomes 5 and next becomes 6. This is a case where there is a request for prev at this time.)
-		// Even if the order specification is in ascending order, the reverse order is used for prev, so firstData becomes 4 and lastData becomes 3.
+		// and when the data of 5 and 6 are obtained by next again,
+		// prev becomes 5 and next becomes 6. This is a case where there is a request for prev at this time.)
+		// Even if the order specification is in ascending order, the reverse order is used for prev,
+		// so firstData becomes 4 and lastData becomes 3.
 		// If the pagination is calculated as it is, 4 will be in prev and 3 in next,
-		// The next access to next will return 4 and 5, which are the next two values after 3, even though 5 and 6, which are the next two values after 4, are expected.
-		// Also, when you access prev, it returns 3, 2, which are two before 4, even though it expects 2, 1, which are two before 3.
+		// The next access to next will return 4 and 5, which are the next two values after 3,
+		// even though 5 and 6, which are the next two values after 4, are expected.
+		// Also, when you access prev, it returns 3, 2, which are two before 4,
+		// even though it expects 2, 1, which are two before 3.
 		pageInfo = calculatePagination(isFirst, hasPagination, pointsNext, lastData, firstData)
 	}
 
