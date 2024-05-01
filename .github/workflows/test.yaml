@@ -30,4 +30,6 @@ jobs:
       - name: report coverage
         uses: k1LoW/octocov-action@v1
       - name: codecov
-        uses: codecov/codecov-action@v2
+        uses: codecov/codecov-action@v3
+        with:
+          file: ./coverage.out
