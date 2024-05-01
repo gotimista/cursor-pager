@@ -1,0 +1,21 @@
+name: CI
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - develop
+      - 'releases/**'
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    name: Lint
+    uses: ./.github/workflows/lint.yaml
+  test:
+    name: Test
+    uses: ./.github/workflows/test.yaml
