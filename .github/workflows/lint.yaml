@@ -1,0 +1,63 @@
+name: Lint
+
+on:
+  workflow_call:
+  workflow_dispatch:
+
+jobs:
+  lint-go:
+    name: Lint go files
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Setup go
+        uses: actions/setup-go@v5
+        with:
+          go-version: "1.21"
+          check-latest: true
+      - name: Download go modules
+        run: go mod download
+      - name: Setup aqua
+        uses: aquaproj/aqua-installer@v3.0.0
+        with:
+          aqua_version: v2.25.1
+          policy_allow: true
+      - name: Lint go files
+        uses: reviewdog/action-golangci-lint@v2
+        with:
+          github_token: ${{ github.token }}
+          golangci_lint_flags: "--config=./.golangci.yaml ./..."
+          fail_on_error: true
+          reporter: "github-pr-review"
+          filter_mode: nofilter
+  lint-workflows:
+    name: Lint github workflows
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Setup aqua
+        uses: aquaproj/aqua-installer@v3.0.0
+        with:
+          aqua_version: v2.25.1
+          policy_allow: true
+      - name: Ensure that shellcheck is installed
+        run: shellcheck --version
+      - name: Lint github workflows
+        run: actionlint
+  check-aqua-checksum:
+    name: Check aqua checksum
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Setup aqua
+        uses: aquaproj/aqua-installer@v3.0.0
+        with:
+          aqua_version: v2.25.1
+          policy_allow: true
+      - name: Update aqua checksum
+        run: aqua update-checksum --prune
+      - name: Check diff
+        run: git diff --exit-code aqua-checksums.json
