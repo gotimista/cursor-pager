@@ -27,9 +27,9 @@ jobs:
         run: |
           go clean -testcache
           gotestsum ./... -- -race -coverprofile=coverage.out
-      - name: Upload coverage reports to Codecov
-        uses: codecov/codecov-action@v4.0.1
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
       - name: report coverage
         uses: k1LoW/octocov-action@v1
